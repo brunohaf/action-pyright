@@ -49,6 +49,15 @@ cleanup() {
   fi
 }
 
+print_output() {
+  local file="$1"
+  local label="$2"
+
+  echo "::group:: 🛠️ ${label} ::"
+  cat "$file"
+  echo '::endgroup::'
+}
+
 echo '::group::🔎 Running pyright with reviewdog 🐶 ...'
 
 RDTMP=$(mktemp -d)
@@ -60,6 +69,10 @@ set -x
 npm exec --yes -- "pyright@${INPUT_PYRIGHT_VERSION}" "${PYRIGHT_ARGS[@]}" ${INPUT_PYRIGHT_FLAGS:-} >"$RDTMP/pyright.json" || true
 
 python3 "${BASE_PATH}/pyright_to_rdjson/pyright_to_rdjson.py" <"$RDTMP/pyright.json" >"$RDTMP/rdjson.json"
+
+
+print_output "$RDTMP/pyright.json" "original json output"
+print_output "$RDTMP/rdjson.json" "converted rdjson output"
 
 set +e
 # shellcheck disable=SC2086
