@@ -71,7 +71,7 @@ runs:
   steps:
     - uses: actions/setup-node@v4
       with:
-        node-version: '8.5.1'
+        node-version: '>=12'
     - run: $GITHUB_ACTION_PATH/script.sh
       shell: bash
       env:
