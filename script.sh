@@ -2,30 +2,6 @@
 
 set -euo pipefail
 
-# Function to install the latest npm if it's not at least v7
-install_npm_if_needed() {
-  local required_npm_major_version=7
-  if command -v npm &>/dev/null; then
-    local npm_version
-    npm_version=$(npm --version)
-    local npm_major_version
-    npm_major_version=$(echo "$npm_version" | cut -d '.' -f 1)
-
-    if (( npm_major_version < required_npm_major_version )); then
-      echo "npm version is less than $required_npm_major_version. Installing latest npm..."
-      npm install -g npm@latest
-    else
-      echo "npm version is at least $required_npm_major_version. Continuing..."
-    fi
-  else
-    echo "npm is not installed. Installing npm..."
-    curl -L https://www.npmjs.com/install.sh | sh
-  fi
-}
-
-# Call the function to ensure npm is installed and updated
-install_npm_if_needed
-
 BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
 INPUT_PYRIGHT_VERSION=${INPUT_PYRIGHT_VERSION:-latest}
 
