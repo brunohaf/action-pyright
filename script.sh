@@ -69,7 +69,8 @@ reviewdog -f=rdjson \
   -filter-mode="${INPUT_FILTER_MODE}" \
   -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
   -level="${INPUT_LEVEL}" \
-  ${INPUT_REVIEWDOG_FLAGS} < "$RDTMP/rdjson.json"
+  ${INPUT_REVIEWDOG_FLAGS} \
+  -tee < "$RDTMP/rdjson.json"
 
 reviewdog_rc=$?
 
