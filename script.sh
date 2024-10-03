@@ -74,10 +74,12 @@ python3 "${BASE_PATH}/pyright_to_rdjson/pyright_to_rdjson.py" <"$RDTMP/pyright.j
 # Configure reviewdog flags
 REVIEWDOG_FLAGS="${INPUT_BANDIT_FLAGS:-}"
 
-set +x
-print_output "$RDTMP/pyright.json" "original json output"
-print_output "$RDTMP/rdjson.json" "converted rdjson output"
-REVIEWDOG_FLAGS="$REVIEWDOG_FLAGS -tee"
+[ "${INPUT_VERBOSE:-false}" == "true" ] && {
+  set +x
+  print_output "$RDTMP/pyright.json" "original json output"
+  print_output "$RDTMP/rdjson.json" "converted rdjson output"
+  REVIEWDOG_FLAGS="$REVIEWDOG_FLAGS -tee"
+}
 
 
 set +e
