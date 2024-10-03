@@ -15,6 +15,16 @@ echo '::group::🐶 Installing reviewdog ... https://github.com/reviewdog/review
 curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b "${TEMP_PATH}" "${REVIEWDOG_VERSION}" 2>&1
 echo '::endgroup::'
 
+print_output() {
+  local file="$1"
+  local label="$2"
+
+  echo "::group:: 🛠️ ${label} ::"
+  cat "$file"
+  echo '::endgroup::'
+}
+
+
 PYRIGHT_ARGS=(--outputjson)
 
 if [ -n "${INPUT_PYTHON_PLATFORM:-}" ]; then
@@ -60,6 +70,13 @@ set -x
 npm exec --yes -- "pyright@${INPUT_PYRIGHT_VERSION}" "${PYRIGHT_ARGS[@]}" ${INPUT_PYRIGHT_FLAGS:-} >"$RDTMP/pyright.json" || true
 
 python3 "${BASE_PATH}/pyright_to_rdjson/pyright_to_rdjson.py" <"$RDTMP/pyright.json" >"$RDTMP/rdjson.json"
+
+[ "${INPUT_VERBOSE:-false}" == "true" ] && {
+  set +x
+  print_output "$RDTMP/pyright.json" "original json output"
+  print_output "$RDTMP/rdjson.json" "converted rdjson output"
+  REVIEWDOG_FLAGS="$REVIEWDOG_FLAGS -tee"
+}
 
 set +e
 # shellcheck disable=SC2086
