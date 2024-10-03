@@ -66,6 +66,9 @@ inputs:
   pyright_flags:
     description: "Extra arguments; can be used to specify specific files to check."
     required: false
+  verbose:
+    description: 'Verbose mode'
+    default: 'false'
 runs:
   using: "composite"
   steps:
@@ -95,6 +98,7 @@ runs:
         INPUT_PROJECT: ${{ inputs.project }}
         INPUT_LIB: ${{ inputs.lib }}
         INPUT_PYRIGHT_FLAGS: ${{ inputs.pyright_flags }}
+        INPUT_VERBOSE: ${{ inputs.verbose }}
 branding:
   icon: "alert-octagon"
   color: "blue"
