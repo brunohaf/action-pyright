@@ -71,6 +71,9 @@ npm exec --yes -- "pyright@${INPUT_PYRIGHT_VERSION}" "${PYRIGHT_ARGS[@]}" ${INPU
 
 python3 "${BASE_PATH}/pyright_to_rdjson/pyright_to_rdjson.py" <"$RDTMP/pyright.json" >"$RDTMP/rdjson.json"
 
+# Configure reviewdog flags
+REVIEWDOG_FLAGS="${INPUT_BANDIT_FLAGS:-}"
+
 [ "${INPUT_VERBOSE:-false}" == "true" ] && {
   set +x
   print_output "$RDTMP/pyright.json" "original json output"
@@ -86,7 +89,7 @@ reviewdog -f=rdjson \
   -filter-mode="${INPUT_FILTER_MODE}" \
   -fail-on-error="${INPUT_FAIL_ON_ERROR}" \
   -level="${INPUT_LEVEL}" \
-  ${INPUT_REVIEWDOG_FLAGS} < "$RDTMP/rdjson.json"
+  ${REVIEWDOG_FLAGS} < "$RDTMP/rdjson.json"
 
 reviewdog_rc=$?
 
